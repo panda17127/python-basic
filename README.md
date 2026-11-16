@@ -60,6 +60,14 @@ curl -X POST http://127.0.0.1:8008/api/messages ^
 {"id": 1, "sender": "gao", "content": "hello", "created_at": "2026-11-16T06:34:03"}
 ```
 
+## 测试
+
+```bash
+python -m pytest tests -v
+```
+
+测试通过 `dependency_overrides` 把 `get_db` 换成测试引擎的会话、用 TestClient 直接调用应用（不需要先启动服务、不占端口）。
+
 ## 项目结构
 
 ```
@@ -67,6 +75,8 @@ python-basic/
 ├── run.py               # 启动入口：先建表，再启动 uvicorn
 ├── requirements.txt     # 依赖清单
 ├── .env                 # 本机配置（已被 .gitignore 排除，不入库）
+├── tests/
+│   └── test_messages.py # 接口测试：pytest + TestClient
 └── app/
     ├── main.py          # 主插座：创建 FastAPI 实例，挂载各模块路由
     ├── config.py        # 设置中心：pydantic-settings 读 .env
@@ -96,3 +106,4 @@ POST /api/messages
 - SQLAlchemy 2.0 — ORM（声明式模型 + Mapped 注解）
 - pydantic-settings — 配置管理
 - SQLite — 数据库（文件在项目根 `message.db`，已 gitignore）
+- pytest — 测试（配合 fastapi.testclient 的 TestClient）
