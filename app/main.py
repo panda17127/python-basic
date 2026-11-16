@@ -1,11 +1,6 @@
 from fastapi import FastAPI
 
-from app.schemas import testData, testDataOut
+from app.routers import test
 
-app = FastAPI(title="FastAPI Demo", description="FastAPI Demo", version="0.1.0")
-
-@app.get("/test", response_model=testDataOut)
-
-def test():
-    data = testData(service="FastAPI Demo", version="0.1.0")
-    return testDataOut(data=data)
+app = FastAPI(title="good-finds-server", version="1.3.0")
+app.include_router(test.router)     # 收编:把插线板插到主插座
