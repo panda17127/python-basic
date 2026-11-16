@@ -1,8 +1,11 @@
 from fastapi import FastAPI
 
+from app.schemas import testData, testDataOut
+
 app = FastAPI(title="FastAPI Demo", description="FastAPI Demo", version="0.1.0")
 
-@app.get("/test") 
+@app.get("/test", response_model=testDataOut)
 
 def test():
-    return {"code": "200", "msg": "ok", "data": {"title": "FastAPI Demo", "version": "0.1.0"}}
+    data = testData(service="FastAPI Demo", version="0.1.0")
+    return testDataOut(data=data)
