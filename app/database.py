@@ -15,3 +15,11 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
 # 模型基类(族谱起点):models.py 里的表都继承它,SQLAlchemy 靠它收集"项目里有哪些表"
 class Base(DeclarativeBase):
     pass
+
+# 依赖函数:配合 FastAPI 的 Depends 使用,每个请求自动"领一个会话、用完自动还"
+def get_db():
+    db = SessionLocal()   # 进请求前:找工厂领一个 Session
+    try:
+        yield db      # 把 db 交出去给请求用(yield:请求处理期间停在这,处理完才回来)
+    finally:
+        db.close()    # 请求结束后打扫:无论成功还是报错,会话必关,连接还给引擎
